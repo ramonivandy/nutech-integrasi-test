@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const port = 3001;
+const config = require('./src/helper/global_config');
+const port = config.get('/port') || 3001;
 
 app.get('/', (req, res) => {
     return res.json({
