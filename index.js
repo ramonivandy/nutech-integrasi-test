@@ -11,7 +11,11 @@ app.get('/', (req, res) => {
     });
 });
 
+// Database connection pool
 connectDatabase();
+
+// application/json parser
+app.use(express.json());
 
 app.use('/membership', membershipRoute);
 
