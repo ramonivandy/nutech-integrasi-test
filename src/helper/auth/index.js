@@ -26,12 +26,13 @@ const verifyToken = async (req, res, next) => {
   };
   const token = getToken(req.headers);
   if (!token) {
-    result.err = "Authentication Required";
+    result.err = "Token tidak valid atau kedaluwarsa";
     return res.status(401).send(result);
   }
 
   try {
     let decodedToken = jwt.verify(token, "randomstringforjsonwebtoken");
+    req.decodedToken = decodedToken;
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       result.err = "Access token expired";

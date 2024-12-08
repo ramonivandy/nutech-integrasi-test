@@ -2,6 +2,7 @@ const db = require("../helper/database/index");
 const jwt = require("../helper/auth/index");
 const bcrypt = require("bcrypt");
 const membershipSchema = require("../models/membershipModel");
+const { param } = require("../routes/membershipRoute");
 const saltRounds = 10;
 
 const postRegistration = async (req, res) => {
@@ -127,7 +128,22 @@ const postLogin = async (req, res) => {
   });
 };
 
+const getProfile = async (req, res) => {
+  let sql =
+    "SELECT email, first_name, last_name, profile_image FROM membership WHERE email = $1";
+  let params = [req.decodedToken.email];
+
+  const data = await db.query(sql, params);
+
+  return res.json({
+    status: 0,
+    message: "Sukses",
+    data: data.rows[0],
+  });
+};
+
 module.exports = {
   postRegistration,
   postLogin,
+  getProfile,
 };
