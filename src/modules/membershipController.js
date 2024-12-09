@@ -48,7 +48,7 @@ const postRegistration = async (req, res) => {
 
     // Prepare sql and values
     sql =
-      "INSERT INTO membership(email, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *";
+      "INSERT INTO memberships(email, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *";
     const values = [value.email, value.first_name, value.last_name, hash];
 
     // Insert data to database
@@ -167,7 +167,7 @@ const updateProfile = async (req, res) => {
     });
   }
 
-  let sql = "UPDATE membership SET ";
+  let sql = "UPDATE memberships SET ";
   let params = [];
   let { first_name, last_name } = req.body;
   if (first_name) {
@@ -223,7 +223,7 @@ const updateProfileImage = async (req, res) => {
   }
 
   sql =
-    "UPDATE membership SET profile_image = $1 WHERE email = $2 RETURNING email, first_name, last_name, profile_image";
+    "UPDATE memberships SET profile_image = $1 WHERE email = $2 RETURNING email, first_name, last_name, profile_image";
   params = [req.file.path, req.decodedToken.email];
   const update = await db.query(sql, params);
 
