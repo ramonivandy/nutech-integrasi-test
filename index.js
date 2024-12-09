@@ -4,6 +4,7 @@ const config = require("./src/helper/global_config");
 const port = config.get("/port") || 3001;
 const { connectDatabase } = require("./src/helper/database/index");
 const membershipRoute = require("./src/routes/membershipRoute");
+const informationRoute = require("./src/routes/informationRoute");
 
 app.get("/", (req, res) => {
   return res.status(200).json({
@@ -19,7 +20,8 @@ connectDatabase();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/membership", membershipRoute);
+app.use("/", membershipRoute);
+app.use("/", informationRoute);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
