@@ -24,7 +24,25 @@ const getBalance = async (req, res) => {
   });
 };
 
-const getTransactionHistory = async (req, res) => {};
+const getTransactionHistory = async (req, res) => {
+  let { limit, offset } = req.query;
+  let sql =
+    "SELECT invoice_number, transaction_type, total_amount FROM transactions WHERE user_id = $1 ORDER BY created_on DESC LIMIT $2 OFFSET $3";
+  let params = [req.decodedToken.id, limit, offset];
+
+  const data = await db.query(sql, params);
+
+  return res.status(200).json({
+    status: 0,
+    message: "Get History Berhasil",
+    data: {
+      offset: offset,
+      limit: limit,
+      records: data.rows,
+    },
+  });
+};
+
 const postTopup = async (req, res) => {
   // create transaction
   let sql =
@@ -64,6 +82,7 @@ const postTopup = async (req, res) => {
     },
   });
 };
+
 const postTransaction = async (req, res) => {};
 
 function generateInvoice() {
