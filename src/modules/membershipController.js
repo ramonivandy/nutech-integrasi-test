@@ -144,6 +144,7 @@ const getProfile = async (req, res) => {
     });
   }
 
+  data.rows[0].profile_image = `${BASE_URL}/${data.rows[0].profile_image}`;
   return res.json({
     status: 0,
     message: "Sukses",
