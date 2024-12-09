@@ -34,7 +34,7 @@ const postRegistration = async (req, res) => {
 
     // Check if email already exists
     let sql =
-      "SELECT id, email, first_name, last_name, password FROM membership WHERE email = $1 LIMIT (1)";
+      "SELECT id, email, first_name, last_name, password from memberships WHERE email = $1 LIMIT (1)";
     let params = [value.email];
     let data = await db.query(sql, params);
 
@@ -81,7 +81,7 @@ const postLogin = async (req, res) => {
 
   // Check user exists
   let sql =
-    "SELECT id, email, first_name, last_name, password FROM membership WHERE email = $1 LIMIT (1)";
+    "SELECT id, email, first_name, last_name, password from memberships WHERE email = $1 LIMIT (1)";
   let params = [value.email];
   let data = await db.query(sql, params);
 
@@ -132,7 +132,7 @@ const postLogin = async (req, res) => {
 
 const getProfile = async (req, res) => {
   let sql =
-    "SELECT email, first_name, last_name, profile_image FROM membership WHERE email = $1";
+    "SELECT email, first_name, last_name, profile_image from memberships WHERE email = $1";
   let params = [req.decodedToken.email];
 
   const data = await db.query(sql, params);
@@ -197,7 +197,7 @@ const updateProfileImage = async (req, res) => {
     params = "";
   const profile_image = `${BASE_URL}/${req.file.path}`;
 
-  sql = "SELECT profile_image FROM membership WHERE email = $1";
+  sql = "SELECT profile_image from memberships WHERE email = $1";
   params = [req.decodedToken.email];
   const data = await db.query(sql, params);
 
