@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const membershipSchema = require("../models/membershipModel");
 const saltRounds = 10;
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 const postRegistration = async (req, res) => {
   // Validate body data
@@ -150,10 +151,50 @@ const getProfile = async (req, res) => {
   });
 };
 
+const updateProfile = async (req, res) => {
+  const { error, value } = membershipSchema.membershipUpdate.validate(
+    req.body,
+    { abortEarly: false } // Get all validate error
+  );
+
+  if (error) {
+    // Collect all error messages
+    const errorMessages = error.details.map((err) => err.message);
+
+    return res.status(400).json({
+      status: 102,
+      message: errorMessages,
+    });
+  }
+
+  let sql = "UPDATE membership SET ";
+  let params = [];
+  let { first_name, last_name } = req.body;
+  if (first_name) {
+    sql += "first_name = $1, ";
+    params.push(first_name);
+  }
+  if (last_name) {
+    sql += "last_name = $2 ";
+    params.push(last_name);
+  }
+
+  sql += " WHERE id = $3 RETURNING email, first_name, last_name, profile_image";
+  params.push(req.decodedToken.id);
+
+  const update = await db.query(sql, params);
+
+  update.rows[0].profile_image = `${BASE_URL}/${update.rows[0].profile_image}`;
+  return res.status(200).json({
+    status: 0,
+    message: "Update Pofile berhasil",
+    data: update.rows[0],
+  });
+};
+
 const updateProfileImage = async (req, res) => {
   let sql,
     params = "";
-  const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
   const profile_image = `${BASE_URL}/${req.file.path}`;
 
   sql = "SELECT profile_image FROM membership WHERE email = $1";
@@ -198,5 +239,6 @@ module.exports = {
   postRegistration,
   postLogin,
   getProfile,
+  updateProfile,
   updateProfileImage,
 };

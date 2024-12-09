@@ -14,7 +14,13 @@ const membershipLogin = Joi.object({
   password: Joi.string().alphanum().required(),
 });
 
+const membershipUpdate = Joi.object({
+  first_name: Joi.string().alphanum().min(1).optional(),
+  last_name: Joi.string().alphanum().min(1).optional(),
+});
+
 module.exports = {
   membershipRegistration,
   membershipLogin,
+  membershipUpdate,
 };

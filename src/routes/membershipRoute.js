@@ -9,6 +9,11 @@ router.post("/login", membershipController.postLogin);
 
 router.get("/profile", jwt.verifyToken, membershipController.getProfile);
 router.put(
+  "/profile/update",
+  jwt.verifyToken,
+  membershipController.updateProfile
+);
+router.put(
   "/profile/image",
   upload.single("file"),
   jwt.verifyToken,
